@@ -6,7 +6,7 @@
 import { Icons } from '../../constants/icons';
 import { MobileInput, BoxInput, BoxPhoto, BoxButton } from '../common';
 import { GradeInput } from '../grading/GradeInput';
-import { calculateTotalJanjang, isDuplicateTPH } from '../../utils';
+import { calculateTotalJanjang, calculateTotalKg, isDuplicateTPH } from '../../utils';
 
 export function TPHCard({ 
   item, 
@@ -19,7 +19,8 @@ export function TPHCard({
   onRemove 
 }) {
   const isDuplicate = isDuplicateTPH(items, index, item.noTPH);
-  const total = calculateTotalJanjang(item);
+  const totalJanjang = calculateTotalJanjang(item);
+  const totalKg = calculateTotalKg(item);
 
   return (
     <div 
@@ -56,7 +57,7 @@ export function TPHCard({
           </div>
         </div>
         
-        {/* Blok & Ancak */}
+        {/* Blok, Ancak & BJR */}
         <div className="flex gap-2">
           <div className="flex-1">
             <MobileInput 
@@ -72,6 +73,15 @@ export function TPHCard({
               placeholder="#" 
               value={item.noAncak} 
               onChange={e => onUpdate(index, 'noAncak', e.target.value)} 
+            />
+          </div>
+          <div className="flex-1">
+            <MobileInput 
+              label="BJR (Kg)" 
+              type="number" 
+              placeholder="5" 
+              value={item.bjr} 
+              onChange={e => onUpdate(index, 'bjr', e.target.value)} 
             />
           </div>
         </div>
@@ -211,44 +221,22 @@ export function TPHCard({
           />
         </div>
         
-        <div className="border-t border-dashed my-3"></div>
-        
-        <label className="text-[10px] font-bold text-blue-500 uppercase mb-2 block tracking-wider">
-          Data Panen
-        </label>
-        
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          <MobileInput 
-            label="BJR (Kg)" 
-            type="number" 
-            placeholder="5" 
-            value={item.bjr} 
-            onChange={e => onUpdate(index, 'bjr', e.target.value)} 
-          />
-          <MobileInput 
-            label="Jumlah Janjang" 
-            type="number" 
-            placeholder="21" 
-            value={item.jumlahJanjang} 
-            onChange={e => onUpdate(index, 'jumlahJanjang', e.target.value)} 
-          />
-          <MobileInput 
-            label="Total (Kg)" 
-            type="number" 
-            placeholder="105" 
-            value={item.kgTotal} 
-            onChange={e => onUpdate(index, 'kgTotal', e.target.value)} 
-          />
-        </div>
-        
         {/* Footer Info */}
-        <div className="mt-3 flex justify-between items-center bg-gray-50 p-2 rounded">
-          <span className="text-xs text-gray-500">
-            Jam Input: {item.jam}
-          </span>
-          <div className="text-xs font-bold text-gray-700">
-            Total Janjang: <span className="text-lg">{total}</span>
+        <div className="mt-3 bg-gray-50 p-2 rounded space-y-1">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500">Jam Input: {item.jam}</span>
+            <div className="text-xs font-bold text-gray-700">
+              Total Janjang: <span className="text-lg text-green-600">{totalJanjang}</span>
+            </div>
           </div>
+          {item.bjr && totalJanjang > 0 && (
+            <div className="flex justify-between items-center border-t pt-1">
+              <span className="text-xs text-gray-500">BJR: {item.bjr} Kg</span>
+              <div className="text-xs font-bold text-blue-700">
+                Total: <span className="text-lg">{totalKg.toFixed(2)} Kg</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

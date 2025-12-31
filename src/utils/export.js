@@ -54,14 +54,26 @@ export function prepareJSONExport(headerData, items) {
  * @returns {string} HTML table string
  */
 export function generateExcelHTML(headerData, items) {
-  const rows = items.map((item, idx) => {
-    const total = 
+  const calculateTotalJanjang = (item) => {
+    return (
       (parseInt(item.matang) || 0) +
       (parseInt(item.mengkal) || 0) +
       (parseInt(item.mentah) || 0) +
       (parseInt(item.lewatMatang) || 0) +
       (parseInt(item.abnormal) || 0) +
-      (parseInt(item.seranganHama) || 0);
+      (parseInt(item.seranganHama) || 0)
+    );
+  };
+  
+  const calculateTotalKg = (item) => {
+    const totalJanjang = calculateTotalJanjang(item);
+    const bjr = parseFloat(item.bjr) || 0;
+    return totalJanjang * bjr;
+  };
+  
+  const rows = items.map((item, idx) => {
+    const totalJanjang = calculateTotalJanjang(item);
+    const totalKg = calculateTotalKg(item);
     
     return `<tr>
       <td>${idx + 1}</td>
@@ -83,10 +95,9 @@ export function generateExcelHTML(headerData, items) {
       <td>${item.tangkaiPanjang || 0}</td>
       <td>${item.janjangKosong || 0}</td>
       <td>${item.kgBerondolan || 0}</td>
-      <td>${total}</td>
+      <td>${totalJanjang}</td>
       <td>${item.bjr || '-'}</td>
-      <td>${item.jumlahJanjang || '-'}</td>
-      <td>${item.kgTotal || '-'}</td>
+      <td>${item.bjr && totalJanjang > 0 ? totalKg.toFixed(2) : '-'}</td>
       <td>${item.lastModified || '-'}</td>
     </tr>`;
   }).join('');
@@ -121,8 +132,7 @@ export function generateExcelHTML(headerData, items) {
         <th>Kg Berondolan</th>
         <th>Total Janjang</th>
         <th>BJR</th>
-        <th>Jumlah Janjang</th>
-        <th>Kg Total</th>
+        <th>Total Kg</th>
         <th>Terakhir Dirubah</th>
       </tr>
     </thead>

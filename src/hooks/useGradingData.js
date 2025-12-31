@@ -39,9 +39,7 @@ const createDefaultItem = () => {
     foto_janjangKosong: null,
     kgBerondolan: '',
     foto_kgBerondolan: null,
-    bjr: '',
-    jumlahJanjang: '',
-    kgTotal: ''
+    bjr: ''
   };
 };
 

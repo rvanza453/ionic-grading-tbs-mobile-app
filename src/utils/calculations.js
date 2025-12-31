@@ -20,6 +20,17 @@ export function calculateTotalJanjang(item) {
 }
 
 /**
+ * Hitung total kg (Total Janjang * BJR)
+ * @param {Object} item - Data item grading
+ * @returns {number} Total kg
+ */
+export function calculateTotalKg(item) {
+  const totalJanjang = calculateTotalJanjang(item);
+  const bjr = parseFloat(item.bjr) || 0;
+  return totalJanjang * bjr;
+}
+
+/**
  * Hitung summary totals dari filtered items
  * @param {Array} items - Array data items
  * @returns {Object} Summary totals object
@@ -35,7 +46,8 @@ export function calculateSummaryTotals(items) {
     tp: acc.tp + (parseInt(item.tangkaiPanjang) || 0),
     jk: acc.jk + (parseInt(item.janjangKosong) || 0),
     kg: acc.kg + (parseInt(item.kgBerondolan) || 0),
-    total: acc.total + calculateTotalJanjang(item)
+    total: acc.total + calculateTotalJanjang(item),
+    totalKg: acc.totalKg + calculateTotalKg(item)
   }), {
     matang: 0,
     mengkal: 0,
@@ -46,7 +58,8 @@ export function calculateSummaryTotals(items) {
     tp: 0,
     jk: 0,
     kg: 0,
-    total: 0
+    total: 0,
+    totalKg: 0
   });
 }
 
@@ -65,4 +78,3 @@ export function isDuplicateTPH(items, currentIndex, tphNumber) {
     item.noTPH === tphNumber
   ).length > 0;
 }
-

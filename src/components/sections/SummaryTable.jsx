@@ -3,7 +3,7 @@
  * Tabel ringkasan data grading
  */
 
-import { calculateTotalJanjang, calculateSummaryTotals } from '../../utils';
+import { calculateTotalJanjang, calculateTotalKg, calculateSummaryTotals } from '../../utils';
 
 export function SummaryTable({ filteredItems, headerData }) {
   const summaryTotals = calculateSummaryTotals(filteredItems);
@@ -33,8 +33,7 @@ export function SummaryTable({ filteredItems, headerData }) {
             <th className="p-2 bg-yellow-50">Kg Brd</th>
             <th className="p-2 font-black">Total Jjg</th>
             <th className="p-2 bg-blue-50">BJR</th>
-            <th className="p-2 bg-blue-50">Jml Jjg</th>
-            <th className="p-2 bg-blue-50">Kg Total</th>
+            <th className="p-2 bg-blue-50">Total Kg</th>
             <th className="p-2 text-gray-500">Terakhir Dirubah</th>
           </tr>
         </thead>
@@ -64,8 +63,11 @@ export function SummaryTable({ filteredItems, headerData }) {
               <td className="p-2 bg-yellow-50">{item.kgBerondolan || 0}</td>
               <td className="p-2 font-black">{calculateTotalJanjang(item)}</td>
               <td className="p-2 bg-blue-50">{item.bjr || '-'}</td>
-              <td className="p-2 bg-blue-50">{item.jumlahJanjang || '-'}</td>
-              <td className="p-2 bg-blue-50">{item.kgTotal || '-'}</td>
+              <td className="p-2 bg-blue-50 font-bold">
+                {item.bjr && calculateTotalJanjang(item) > 0 
+                  ? calculateTotalKg(item).toFixed(2) 
+                  : '-'}
+              </td>
               <td className="p-2 text-[9px] text-gray-400 italic">
                 {item.lastModified || '-'}
               </td>
@@ -86,7 +88,8 @@ export function SummaryTable({ filteredItems, headerData }) {
             <td className="p-2">{summaryTotals.jk}</td>
             <td className="p-2">{summaryTotals.kg}</td>
             <td className="p-2 text-lg">{summaryTotals.total}</td>
-            <td colSpan={3}></td>
+            <td className="p-2">-</td>
+            <td className="p-2 text-lg">{summaryTotals.totalKg.toFixed(2)}</td>
             <td></td>
           </tr>
         </tfoot>
